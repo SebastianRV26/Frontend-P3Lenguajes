@@ -16,5 +16,17 @@ namespace Frontend_P3Lenguajes
         {
             InitializeComponent();
         }
+
+        private void BtnLoad_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int len = int.Parse(tbMatriz.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Ingrese un número Válido", "Advertencia", MessageBoxButtons.OKCancel);
+            }
+        }
     }
 }

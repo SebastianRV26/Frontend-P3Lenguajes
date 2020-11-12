@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1DF159C5-7D67-44FE-BB62-DEC371C2BC46}</ProjectGuid>
+    <ProjectGuid>{33991564-FF4D-4665-B5F3-C37D41E5B8CE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Frontend_P3Lenguajes</RootNamespace>
-    <AssemblyName>Frontend-P3Lenguajes</AssemblyName>
+    <AssemblyName>Frontend_P3Lenguajes</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -50,6 +50,11 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UserControl1.resx">
+      <DependentUpon>UserControl1.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
