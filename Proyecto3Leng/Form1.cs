@@ -13,6 +13,8 @@ namespace Proyecto3Leng
 {
     public partial class Form1 : Form
     {
+        Boolean flag = true; // true editable, false consult
+
         public Form1()
         {
             InitializeComponent();
@@ -35,9 +37,19 @@ namespace Proyecto3Leng
             }
         }
 
+        /// <summary>
+        /// 
+        /// Al precionar el botón cargar.
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            PlQuery query = new PlQuery("max(3,2,X).");
+            flag = true;
+            lblStatus.Text = "Llenando matriz";
+
+            PlQuery query = new PlQuery("max(3,2,X)."); // se hace la consulta
 
             foreach (PlQueryVariables z in query.SolutionVariables)
             {
@@ -45,6 +57,7 @@ namespace Proyecto3Leng
                 MessageBox.Show("X " + z["X"].ToString(), "Print", MessageBoxButtons.OKCancel);
             }
             query.NextSolution();
+            query.Dispose(); // se cierra la conexión
             try
             {
                 int len = int.Parse(tbMatriz.Text);
@@ -56,27 +69,34 @@ namespace Proyecto3Leng
             }
         }
 
+        /// <summary>
+        /// 
+        /// Crear tabla.
+        /// 
+        /// </summary>
+        /// <param name="tamannio">
+        /// Tamaño de la matriz NxN.
+        /// </param>
         private void fillDataGridView(int tamannio)
         {
             DataTable dt = new DataTable();
-
             dt.Columns.Add(" ");
-            for (int i = 1; i<=tamannio; i++)
+            for (int i = 1; i <= tamannio; i++)
             {
                 dt.Columns.Add(i.ToString());
                 dt.Rows.Add(i.ToString());
             }
-
-            
-            //dt.Columns.Add("Name");
-
-            //dt.Rows.Add("01", "Sebas");
-            //dt.Rows.Add("02", "EdBinns");
-
             dataGridView1.DataSource = dt;
-
             dataGridView1.CellClick += dataGridView1_CellClick;
         }
+
+        /// <summary>
+        /// 
+        /// On item click on data grid view.
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -85,14 +105,29 @@ namespace Proyecto3Leng
                 // cell.Value
                 String x = e.ColumnIndex.ToString();
                 String y = (e.RowIndex + 1).ToString();
-                if (cell.Value == "O")
+                if (flag)
                 {
-                    cell.Value = " ";
+                    // dibujar punto
+
+                    if (x != "0")
+                    {
+                        if (cell.Value == "O")
+                        {
+                            cell.Value = " ";
+                        }
+                        else
+                        {
+                            cell.Value = "O";
+                        }
+                    }
                 }
                 else
                 {
-                    cell.Value = "O";
+                    // consultar por el grupo del punto seleccionado
+
                 }
+                
+                
             }
             catch
             {
@@ -101,9 +136,30 @@ namespace Proyecto3Leng
             
         }
 
+        /// <summary>
+        /// 
+        /// Consultar por el tamaño de los grupos.
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnConsultGroups_Click(object sender, EventArgs e)
         {
 
         }
+
+        /// <summary>
+        /// 
+        /// Terminar de editar la matriz y proceder a realizar consultas.
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSaveMatriz_Click(object sender, EventArgs e)
+        {
+            flag = false;
+            lblStatus.Text = "Consultando";
+        }
+
     }
 }
