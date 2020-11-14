@@ -1,6 +1,7 @@
-﻿namespace Frontend_P3Lenguajes
+﻿
+namespace Proyecto3Leng
 {
-    partial class UserControl1
+    partial class Form1
     {
         /// <summary>
         /// Variable del diseñador necesaria.
@@ -20,7 +21,7 @@
             base.Dispose(disposing);
         }
 
-        #region Código generado por el Diseñador de componentes
+        #region Código generado por el Diseñador de Windows Forms
 
         /// <summary>
         /// Método necesario para admitir el Diseñador. No se puede modificar
@@ -36,7 +37,7 @@
             // lbl1
             // 
             this.lbl1.AutoSize = true;
-            this.lbl1.Location = new System.Drawing.Point(172, 12);
+            this.lbl1.Location = new System.Drawing.Point(210, 13);
             this.lbl1.Name = "lbl1";
             this.lbl1.Size = new System.Drawing.Size(147, 13);
             this.lbl1.TabIndex = 0;
@@ -44,30 +45,32 @@
             // 
             // tbMatriz
             // 
-            this.tbMatriz.Location = new System.Drawing.Point(325, 9);
+            this.tbMatriz.Location = new System.Drawing.Point(363, 10);
             this.tbMatriz.Name = "tbMatriz";
             this.tbMatriz.Size = new System.Drawing.Size(100, 20);
             this.tbMatriz.TabIndex = 1;
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(431, 7);
+            this.btnLoad.Location = new System.Drawing.Point(469, 8);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(75, 23);
             this.btnLoad.TabIndex = 2;
             this.btnLoad.Text = "Cargar";
             this.btnLoad.UseVisualStyleBackColor = true;
-            this.btnLoad.Click += new System.EventHandler(this.BtnLoad_Click);
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
-            // UserControl1
+            // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.tbMatriz);
             this.Controls.Add(this.lbl1);
-            this.Name = "UserControl1";
-            this.Size = new System.Drawing.Size(800, 450);
+            this.Name = "Form1";
+            this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -80,3 +83,4 @@
         private System.Windows.Forms.Button btnLoad;
     }
 }
+

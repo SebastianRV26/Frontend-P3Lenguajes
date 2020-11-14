@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 
 // La información general de un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambie estos valores de atributo para modificar la información
-// asociada a un ensamblado.
-[assembly: AssemblyTitle("Frontend_P3Lenguajes")]
+// asociada con un ensamblado.
+[assembly: AssemblyTitle("Proyecto3Leng")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Frontend_P3Lenguajes")]
+[assembly: AssemblyProduct("Proyecto3Leng")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // El siguiente GUID sirve como id. de typelib si este proyecto se expone a COM.
-[assembly: Guid("33991564-ff4d-4665-b5f3-c37d41e5b8ce")]
+[assembly: Guid("e456acda-a256-4b75-bb02-0468851d24b7")]
 
 // La información de versión de un ensamblado consta de los cuatro valores siguientes:
 //
