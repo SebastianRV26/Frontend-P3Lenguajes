@@ -20,26 +20,32 @@ namespace Proyecto3Leng
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Environment.SetEnvironmentVariable("SWI_HOME_DIR", @"C:\\Program Files (x86)\\swipl");
-            Environment.SetEnvironmentVariable("Path", @"C:\\Program Files (x86)\\swipl\\bin");
+            Environment.SetEnvironmentVariable("SWI_HOME_DIR", @"C:\Program Files (x86)\swipl");
+            Environment.SetEnvironmentVariable("Path", @"C:\Program Files (x86)\swipl\bin");
             string[] p = { "-q", "-f", @"main.pl" };
+
             // Connect to Prolog Engine
             PlEngine.Initialize(p);
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            PlQuery cargar = new PlQuery("punto(3,2)");
-            Console.WriteLine("cargar " + cargar);
-            cargar.NextSolution();
-            try
+            PlQuery query = new PlQuery("max(3,2,X).");
+
+            foreach (PlQueryVariables z in query.SolutionVariables)
+            {
+                //Console.WriteLine(z["X"].ToString());
+                MessageBox.Show("cargar " + z["X"].ToString(), "Print", MessageBoxButtons.OKCancel);
+            }
+            query.NextSolution();
+            /*try
             {
                 int len = int.Parse(tbMatriz.Text);
             }
             catch
             {
                 MessageBox.Show("Ingrese un número Válido", "Advertencia", MessageBoxButtons.OKCancel);
-            }
+            }*/
         }
     }
 }
