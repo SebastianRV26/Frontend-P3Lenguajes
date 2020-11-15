@@ -13,7 +13,8 @@ namespace Proyecto3Leng
 {
     public partial class Form1 : Form
     {
-        Boolean flag = true; // true editable, false consult
+        private Boolean flag = true; // true editable, false consult
+        private DataTable dt = new DataTable();
 
         public Form1()
         {
@@ -79,7 +80,7 @@ namespace Proyecto3Leng
         /// </param>
         private void fillDataGridView(int tamannio)
         {
-            DataTable dt = new DataTable();
+            dt = new DataTable();
             dt.Columns.Add(" ");
             for (int i = 1; i <= tamannio; i++)
             {
@@ -102,13 +103,11 @@ namespace Proyecto3Leng
             try
             {
                 DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                // cell.Value
                 String x = e.ColumnIndex.ToString();
                 String y = (e.RowIndex + 1).ToString();
                 if (flag)
                 {
                     // dibujar punto
-
                     if (x != "0")
                     {
                         if (cell.Value == "O")
@@ -123,29 +122,38 @@ namespace Proyecto3Leng
                 }
                 else
                 {
-                    // consultar por el grupo del punto seleccionado
-
+                    string message = "";
+                    // calcultar el tamaño del grupo al que pertenece el punto
+                    if (x == "0")
+                    {
+                        // llamo a consulta
+                        message = "El punto seleccionado se encuentra en un grupo de tamaño ";
+                    }
+                    else
+                    {
+                        message = "¡El punto no se encuentra en ningún grupo!";
+                    }
+                    MessageBox.Show(message, "Consulta: tamaño al grupo del punto");
                 }
-                
-                
-            }
-            catch
-            {
+
 
             }
+            catch { }
             
         }
 
         /// <summary>
         /// 
-        /// Consultar por el tamaño de los grupos.
+        /// Calculen el número de grupos distintos y sus tamaños para toda la cuadrícula.
         /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnConsultGroups_Click(object sender, EventArgs e)
         {
-
+            // llamar a consultar tamaño de grupos
+            string grupos = "Existen N grupos de tamaño M";
+            MessageBox.Show(grupos, "Consulta");
         }
 
         /// <summary>
@@ -161,5 +169,43 @@ namespace Proyecto3Leng
             lblStatus.Text = "Consultando";
         }
 
+        /// <summary>
+        /// 
+        /// Llamar a regla de prolog que genere los puntos de manera aleatoria.
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnGenerateRandom_Click(object sender, EventArgs e)
+        {
+            flag = false;
+            lblStatus.Text = "Consultando";
+
+            try
+            {
+                int len = int.Parse(tbMatriz.Text);
+
+                fillDataGridView(len);
+
+                Random rnd1 = new Random();
+                int tamannio = rnd1.Next(1, len * len + 1); ;
+                
+                while (tamannio > 0)
+                {
+                    int column = rnd1.Next(1, len + 1);
+                    int row = rnd1.Next(0, len);
+                    if (dt.Rows[row][column] != "0")
+                    {
+                        dt.Rows[row][column] = "O";
+                    }
+                    
+                    tamannio--;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Ingrese un número Válido", "Advertencia");
+            }
+        }
     }
 }
