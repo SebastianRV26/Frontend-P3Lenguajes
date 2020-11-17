@@ -1,0 +1,11 @@
+C:\Users\Usuario\Documents\RepositoriosGit\Proyecto3Leng\Proyecto3Leng\bin\Debug\Proyecto3Leng.exe.config
+C:\Users\Usuario\Documents\RepositoriosGit\Proyecto3Leng\Proyecto3Leng\bin\Debug\Proyecto3Leng.exe
+C:\Users\Usuario\Documents\RepositoriosGit\Proyecto3Leng\Proyecto3Leng\bin\Debug\Proyecto3Leng.pdb
+C:\Users\Usuario\Documents\RepositoriosGit\Proyecto3Leng\Proyecto3Leng\obj\Debug\Proyecto3Leng.csprojAssemblyReference.cache
+C:\Users\Usuario\Documents\RepositoriosGit\Proyecto3Leng\Proyecto3Leng\obj\Debug\Proyecto3Leng.Form1.resources
+C:\Users\Usuario\Documents\RepositoriosGit\Proyecto3Leng\Proyecto3Leng\obj\Debug\Proyecto3Leng.Properties.Resources.resources
+C:\Users\Usuario\Documents\RepositoriosGit\Proyecto3Leng\Proyecto3Leng\obj\Debug\Proyecto3Leng.csproj.GenerateResource.cache
+C:\Users\Usuario\Documents\RepositoriosGit\Proyecto3Leng\Proyecto3Leng\obj\Debug\Proyecto3Leng.csproj.CoreCompileInputs.cache
+C:\Users\Usuario\Documents\RepositoriosGit\Proyecto3Leng\Proyecto3Leng\obj\Debug\Proyecto3Leng.csproj.CopyComplete
+C:\Users\Usuario\Documents\RepositoriosGit\Proyecto3Leng\Proyecto3Leng\obj\Debug\Proyecto3Leng.exe
+C:\Users\Usuario\Documents\RepositoriosGit\Proyecto3Leng\Proyecto3Leng\obj\Debug\Proyecto3Leng.pdb

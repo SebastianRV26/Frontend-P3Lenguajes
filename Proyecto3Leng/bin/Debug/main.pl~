@@ -1,0 +1,134 @@
+:-dynamic(punto/2).
+
+punto(10,1).
+punto(10,2).
+
+punto(4,2).
+punto(5,2).
+
+punto(5,4).
+
+punto(4,5).
+
+punto(8,4).
+punto(8,5).
+punto(8,6).
+punto(9,6).
+
+punto(5,7).
+punto(6,7).
+
+%start :- dynamic(punto/2), % /2 parametros
+%         consult('db.pl').
+
+guardar_punto(X,Y):- assert(punto(X,Y)).
+eliminar_punto(X,Y):- retract(punto(X,Y)).
+eliminar_todo:- retractall(punto(_,_)).
+
+% X posición X.
+% Y posición Y.
+% M: marca t o f.
+%existePunto(X,Y,M).
+
+% X posición X.
+% Y posición Y.
+% XS lista de posiciones X.
+% XS lista de posiciones Y.
+% esGrupo(X,Y,XS,YS).
+
+% R anonimo.
+% ?-agregar([[1,2],[3,4]], [5,6], R).
+% R = [[5, 6], [1, 2], [3, 4]].
+agregar(Lista, New, R):- R = [New|Lista].
+
+conectado_con(X,Y):- X1 is X+1, punto(X1,Y),!.
+conectado_con(X,Y):- X1 is X-1, punto(X1,Y),!.
+conectado_con(X,Y):- Y1 is Y+1, punto(X,Y1),!.
+conectado_con(X,Y):- Y1 is Y-1, punto(X,Y1),!.
+
+conectado(X,Y):-conectado_con(X,Y).
+
+%%%%%%%%%%%%%%%%%% Consultas %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Calcular el tamaño del grupo al que corresponde una casilla.
+%
+grupo(X, Y, Agregados, N):-
+	conectado(X,Y), L=[X,Y],
+	not(member(L, Agregados)),
+	agregar(Agregados, L, R), N2 is N+1,
+	X1 is X+1, grupo(X1, Y, R, N2).
+grupo(X, Y, Agregados, N):-
+	conectado(X,Y), L=[X,Y],
+	not(member(L, Agregados)),
+	agregar(Agregados, L, R), N2 is N+1,
+	Y1 is Y+1, grupo(X, Y1, R, N2).
+grupo(X, Y, Agregados, N):-
+	conectado(X,Y), L=[X,Y],
+	not(member(L, Agregados)),
+	agregar(Agregados, L, R), N2 is N+1,
+	X1 is X-1, grupo(X1, Y, R, N2).
+grupo(X, Y, Agregados, N):-
+	conectado(X,Y), L=[X,Y],
+	not(member(L, Agregados)),
+	agregar(Agregados, L, R), N2 is N+1,
+	Y1 is Y-1, grupo(X, Y1, R, N2).
+
+
+% Calcular el número de grupos distintos y sus tamaños para toda la
+% cuadrícula.
+%
+% pos x, pos y, Lista y numeros
+rp2(X,Y,L,N):-
+	conectado(X,Y),
+	L2=[X,Y],
+	not(member(L2, L)),
+	agregar(L, L2, R),
+	N2 is N+1,
+	X1 is X-1,
+	rp2(X1, Y, R, N2).
+
+rp(X,Y,L,N):-rp2(X,Y,L,N2), N = N2.
+
+ruta2(Lugar, Lugar, _, []).
+ruta2(Inicio, Fin, Visitados, [Inicio|Camino]):-
+    conectado_con(Inicio, AlgunLugar),
+    not(member(AlgunLugar, Visitados)),
+    ruta2(AlgunLugar, Fin,[Inicio|Visitados], Camino).
+
+ruta(Inicio, Fin, Camino):-
+    Inicio\=Fin,
+    ruta2(Inicio, Fin, [], Camino), write(Camino).
+
+g(X,Y, Agregados, N):-
+	X2 is X+1,
+	punto(X2,Y),
+	L=[X2,Y],
+	not(member(L, Agregados)),
+	agregar(Agregados, L, R), N2 is N+1,
+	g(X2, Y, R, N2).
+g(X,Y, Agregados, N):-
+	X2 is X-1,
+	punto(X2,Y),
+	L=[X2,Y],
+	not(member(L, Agregados)),
+	agregar(Agregados, L, R), N2 is N+1,
+	g(X2, Y, R, N2).
+
+g(X,Y, Agregados, N):-
+	Y2 is Y-1,
+	punto(X,Y2),
+	L=[X,Y2],
+	not(member(L, Agregados)),
+	agregar(Agregados, L, R), N2 is N+1,
+	g(X, Y2, R, N2).
+g(X,Y, Agregados, N):-
+	Y2 is Y+1,
+	punto(X,Y2),
+	L=[X,Y2],
+	not(member(L, Agregados)),
+	agregar(Agregados, L, R), N2 is N+1,
+	g(X, Y2, R, N2).
+%g(X,Y, _, _):-not(conectado_con(X,Y)).
+
+
+%g2(X,Y,A,N):- A2 = g(X,Y,A2,0).
+
