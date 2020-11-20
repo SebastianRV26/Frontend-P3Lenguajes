@@ -1,3 +1,4 @@
+:-dynamic(punto/2).
 %punto(10,1).
 %punto(10,2).
 

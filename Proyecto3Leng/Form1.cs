@@ -1,5 +1,6 @@
 ﻿using SbsSW.SwiPlCs;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -142,7 +143,8 @@ namespace Proyecto3Leng
                     query.Dispose();*/
                     if (exite_punto(x, y))
                     {
-                        message = "El punto seleccionado se encuentra en un grupo de tamaño ";
+                        string n = get_grupo(x, y);
+                        message = "El punto seleccionado se encuentra en un grupo de tamaño "+n;
                     } else
                     {
                         message = "¡El punto no se encuentra en ningún grupo!";
@@ -194,12 +196,12 @@ namespace Proyecto3Leng
         {
             flag = false;
             lblStatus.Text = "Consultando";
-            PlQuery query = new PlQuery("punto(11,X)."); // se hace la consulta
+            /*PlQuery query = new PlQuery("punto(11,X)."); // se hace la consulta
             foreach (PlQueryVariables z in query.SolutionVariables)
             {
                 Console.WriteLine(z["X"].ToString());
                 MessageBox.Show("X " + z["X"].ToString(), "Print", MessageBoxButtons.OKCancel);
-            }
+            }*/
         }
 
         /// <summary>
@@ -274,5 +276,54 @@ namespace Proyecto3Leng
             return query.NextSolution();
         }
 
+        private string get_grupo(string x, string y)
+        {
+            PlQuery query = new PlQuery("grupo_punto(" + x + "," + y + ",R,N).");
+            query.Dispose();
+            string n = "";
+            string list1 = "";
+            foreach (PlQueryVariables z in query.SolutionVariables)
+            {
+                list1 = z["R"].ToString();
+                //Console.WriteLine(z["R"].ToString());
+                // Console.WriteLine(z["N"].ToString());
+                n = z["N"].ToString();
+            }
+            query.NextSolution();
+            if (n != "0")
+            {
+                string list2 = list1.Substring(2, list1.Length - 4); // elimina los primeros [[ y los últimos ]]
+                Console.WriteLine("ordr " + list2);
+                string[] stringSeparators = new string[] { "],[" };
+                string[] splitList = list2.Split(stringSeparators, StringSplitOptions.None);
+                //Console.WriteLine("splitList " + splitList);
+                var arlist = new ArrayList();
+                foreach (string line in splitList)
+                {
+                    var arlistAux = new ArrayList();
+                    // Console.WriteLine(line);
+                    arlistAux.Add(line[0]);
+                    arlistAux.Add(line[2]);
+                    arlist.Add(arlistAux);
+                    // Console.WriteLine(arlist[0][0]);
+                }
+
+                pintar_grupo(arlist);
+            }
+            return n;
+        }
+
+        private void pintar_grupo(ArrayList arlist)
+        {
+            foreach (ArrayList a in arlist)
+            {
+                Console.WriteLine(a[0].ToString() + "," + a[1].ToString());
+
+                int row = int.Parse((a[1]).ToString());
+                int column = int.Parse((a[0]).ToString());
+                DataGridViewCell cell = dataGridView1.Rows[row-1].Cells[column];
+                cell.Style.BackColor = System.Drawing.Color.Yellow;
+            }
+        }
     }
 }

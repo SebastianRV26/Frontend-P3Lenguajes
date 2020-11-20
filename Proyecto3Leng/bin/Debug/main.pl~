@@ -153,4 +153,5 @@ aplanar([H1|T1],R,S):-
 
 grupo_punto(X,Y,R,N):-
 	findall(L,g(X,Y,[],L,N),R2),
-	sort(R2,R).
+	aplanar(R2,_,R3),
+	sort(R3,R).
