@@ -1,22 +1,39 @@
 :-dynamic(punto/2).
 
-punto(10,1).
-punto(10,2).
-
-punto(4,2).
-punto(5,2).
-
-punto(5,4).
-
-punto(4,5).
-
-punto(8,4).
-punto(8,5).
-punto(8,6).
-punto(9,6).
-
-punto(5,7).
+punto(1,1).
+punto(8,1).
+punto(1,2).
+punto(2,2).
+punto(3,2).
+punto(7,2).
+punto(8,2).
+punto(1,3).
+punto(2,3).
+punto(1,4).
 punto(6,7).
+punto(6,8).
+punto(0,9).
+punto(1,9).
+punto(2,9).
+punto(3,9).
+
+%punto(10,1).
+%punto(10,2).
+
+%punto(4,2).
+%punto(5,2).
+
+%punto(5,4).
+
+%punto(4,5).
+
+%punto(8,4).
+%punto(8,5).
+%punto(8,6).
+%punto(9,6).
+
+%punto(5,7).
+%punto(6,7).
 
 %start :- dynamic(punto/2), % /2 parametros
 %         consult('db.pl').
@@ -51,26 +68,6 @@ conectado(X,Y):-conectado_con(X,Y).
 %%%%%%%%%%%%%%%%%% Consultas %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Calcular el tamaño del grupo al que corresponde una casilla.
 %
-grupo(X, Y, Agregados, N):-
-	conectado(X,Y), L=[X,Y],
-	not(member(L, Agregados)),
-	agregar(Agregados, L, R), N2 is N+1,
-	X1 is X+1, grupo(X1, Y, R, N2).
-grupo(X, Y, Agregados, N):-
-	conectado(X,Y), L=[X,Y],
-	not(member(L, Agregados)),
-	agregar(Agregados, L, R), N2 is N+1,
-	Y1 is Y+1, grupo(X, Y1, R, N2).
-grupo(X, Y, Agregados, N):-
-	conectado(X,Y), L=[X,Y],
-	not(member(L, Agregados)),
-	agregar(Agregados, L, R), N2 is N+1,
-	X1 is X-1, grupo(X1, Y, R, N2).
-grupo(X, Y, Agregados, N):-
-	conectado(X,Y), L=[X,Y],
-	not(member(L, Agregados)),
-	agregar(Agregados, L, R), N2 is N+1,
-	Y1 is Y-1, grupo(X, Y1, R, N2).
 
 
 % Calcular el número de grupos distintos y sus tamaños para toda la
@@ -98,37 +95,62 @@ ruta(Inicio, Fin, Camino):-
     Inicio\=Fin,
     ruta2(Inicio, Fin, [], Camino), write(Camino).
 
-g(X,Y, Agregados, N):-
+%g(X,Y, [], 0):-not(conectado_con(X,Y)).
+
+g(X,Y, Agregados,[[X2,Y]|R], N):-
 	X2 is X+1,
 	punto(X2,Y),
 	L=[X2,Y],
 	not(member(L, Agregados)),
-	agregar(Agregados, L, R), N2 is N+1,
-	g(X2, Y, R, N2).
-g(X,Y, Agregados, N):-
+	g(X2, Y, [L|Agregados],R, N2),
+	N is N2+1.
+%g(X,Y, Agregados, N):-
+%	X2 is X-1,
+%	punto(X2,Y),
+%	L=[X2,Y],
+%	not(member(L, Agregados)),
+%	agregar(Agregados, L, R), N2 is N+1,
+%	g(X2, Y, R, N2),R=R.
+g(X,Y, Agregados, [[X2,Y]|R], N):-
 	X2 is X-1,
 	punto(X2,Y),
 	L=[X2,Y],
 	not(member(L, Agregados)),
-	agregar(Agregados, L, R), N2 is N+1,
-	g(X2, Y, R, N2).
+	g(X2, Y, [L|Agregados],R, N2),
+	N is N2+1.
 
-g(X,Y, Agregados, N):-
-	Y2 is Y-1,
-	punto(X,Y2),
-	L=[X,Y2],
-	not(member(L, Agregados)),
-	agregar(Agregados, L, R), N2 is N+1,
-	g(X, Y2, R, N2).
-g(X,Y, Agregados, N):-
+g(X,Y, Agregados,[[X,Y2]|R], N):-
 	Y2 is Y+1,
 	punto(X,Y2),
 	L=[X,Y2],
 	not(member(L, Agregados)),
-	agregar(Agregados, L, R), N2 is N+1,
-	g(X, Y2, R, N2).
-%g(X,Y, _, _):-not(conectado_con(X,Y)).
+	g(X, Y2, [L|Agregados], R, N2),
+	N is N2+1.
 
 
-%g2(X,Y,A,N):- A2 = g(X,Y,A2,0).
+%g(X,Y, Agregados, N):-
+%	Y2 is Y-1,
+%	punto(X,Y2),
+%	L=[X,Y2],
+%	not(member(L, Agregados)),
+%	agregar(Agregados, L, R), N2 is N+1,
+%	g(X, Y2, R, N2),R=R.
+g(X,Y, Agregados,[[X,Y2]|R], N):-
+	Y2 is Y-1,
+	punto(X,Y2),
+	L=[X,Y2],
+	not(member(L, Agregados)),
+	g(X, Y2, [L|Agregados],R, N2),
+	N is N2+1.
 
+g(_,_,_,[],0).
+
+aplanar([],_,[]).
+aplanar([H1|T1],R,S):-
+	aplanar(T1,R,S2),
+	append(H1,S2,S3),
+	S = S3.
+
+grupo_punto(X,Y,R,N):-
+	findall(L,g(X,Y,[],L,N),R2),
+	sort(R2,R).
