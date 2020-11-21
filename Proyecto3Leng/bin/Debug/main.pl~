@@ -32,8 +32,8 @@ punto(3,9).
 %punto(8,6).
 %punto(9,6).
 
-%punto(5,7).
-%punto(6,7).
+punto(5,7).
+punto(6,7).
 
 %start :- dynamic(punto/2), % /2 parametros
 %         consult('db.pl').
@@ -152,6 +152,18 @@ aplanar([H1|T1],R,S):-
 	S = S3.
 
 grupo_punto(X,Y,R,N):-
-	findall(L,g(X,Y,[],L,N),R2),
+	findall(L,g(X,Y,[],L,_),R2),
 	aplanar(R2,_,R3),
-	sort(R3,R).
+	sort(R3,R),
+	length(R,N).
+
+todoAux(_, _,[],[]).
+todoAux(X,Y,[[H1|[T1|_]]|T2],S2):-
+	grupo_punto(X,Y,R2,_),
+	write(R2),nl,
+	todoAux(H1,T1,T2,[R2|S3]),!,S2 = S3.
+
+todos_grupos(S):-
+	 findall([X,Y],punto(X,Y),[[H1|[T1|_]]|T2]),
+	 todoAux(H1,T1,T2,S2),
+	 S = S2.

@@ -1,21 +1,21 @@
 :-dynamic(punto/2).
 
-%punto(1,1).
-%punto(8,1).
-%punto(1,2).
-%punto(2,2).
-%punto(3,2).
-%punto(7,2).
-%punto(8,2).
-%punto(1,3).
-%punto(2,3).
-%punto(1,4).
-%punto(6,7).
-%punto(6,8).
-%punto(0,9).
-%punto(1,9).
-%punto(2,9).
-%punto(3,9).
+punto(1,1).
+punto(8,1).
+punto(1,2).
+punto(2,2).
+punto(3,2).
+punto(7,2).
+punto(8,2).
+punto(1,3).
+punto(2,3).
+punto(1,4).
+punto(6,7).
+punto(6,8).
+punto(0,9).
+punto(1,9).
+punto(2,9).
+punto(3,9).
 
 %punto(10,1).
 %punto(10,2).
@@ -32,8 +32,8 @@
 %punto(8,6).
 %punto(9,6).
 
-%punto(5,7).
-%punto(6,7).
+punto(5,7).
+punto(6,7).
 
 %start :- dynamic(punto/2), % /2 parametros
 %         consult('db.pl').
@@ -156,3 +156,14 @@ grupo_punto(X,Y,R,N):-
 	aplanar(R2,_,R3),
 	sort(R3,R),
 	length(R,N).
+
+todoAux(_, _,[],_).
+todoAux(X,Y,[[H1|[T1|_]]|T2],S2):-
+	grupo_punto(X,Y,R2,_),
+	write(R2),nl,
+	todoAux(H1,T1,T2,[R2|S3]),!,S2 = S3.
+
+todos_grupos(S):-
+	 findall([X,Y],punto(X,Y),[[H1|[T1|_]]|T2]),
+	 todoAux(H1,T1,T2,S2),
+	 S = S2.

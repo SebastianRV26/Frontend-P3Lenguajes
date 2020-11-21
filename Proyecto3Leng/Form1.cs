@@ -81,8 +81,14 @@ namespace Proyecto3Leng
         /// </param>
         private void fillDataGridView(int tamannio)
         {
-            //dt.Rows.Clear();
-            //dt.Columns.Clear();
+            /*dt.Rows.Clear();
+            dt.Columns.Clear();
+            dataGridView1.DataSource = null;
+            dataGridView1.Rows.Clear();
+            dataGridView1.Columns.Clear();
+            */
+            dataGridView1.ClearSelection();
+            dataGridView1.CellClick -= dataGridView1_CellClick;
             eliminarTodo();
             dt = new DataTable();
             dt.Columns.Add(" ");
