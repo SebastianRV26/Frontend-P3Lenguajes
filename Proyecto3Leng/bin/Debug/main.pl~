@@ -32,8 +32,8 @@ punto(3,9).
 %punto(8,6).
 %punto(9,6).
 
-punto(5,7).
-punto(6,7).
+%punto(5,7).
+%punto(6,7).
 
 %start :- dynamic(punto/2), % /2 parametros
 %         consult('db.pl').
@@ -95,7 +95,6 @@ ruta(Inicio, Fin, Camino):-
     Inicio\=Fin,
     ruta2(Inicio, Fin, [], Camino), write(Camino).
 
-%g(X,Y, [], 0):-not(conectado_con(X,Y)).
 
 g(X,Y, Agregados,[[X2,Y]|R], N):-
 	X2 is X+1,
@@ -104,13 +103,6 @@ g(X,Y, Agregados,[[X2,Y]|R], N):-
 	not(member(L, Agregados)),
 	g(X2, Y, [L|Agregados],R, N2),
 	N is N2+1.
-%g(X,Y, Agregados, N):-
-%	X2 is X-1,
-%	punto(X2,Y),
-%	L=[X2,Y],
-%	not(member(L, Agregados)),
-%	agregar(Agregados, L, R), N2 is N+1,
-%	g(X2, Y, R, N2),R=R.
 g(X,Y, Agregados, [[X2,Y]|R], N):-
 	X2 is X-1,
 	punto(X2,Y),
@@ -127,14 +119,6 @@ g(X,Y, Agregados,[[X,Y2]|R], N):-
 	g(X, Y2, [L|Agregados], R, N2),
 	N is N2+1.
 
-
-%g(X,Y, Agregados, N):-
-%	Y2 is Y-1,
-%	punto(X,Y2),
-%	L=[X,Y2],
-%	not(member(L, Agregados)),
-%	agregar(Agregados, L, R), N2 is N+1,
-%	g(X, Y2, R, N2),R=R.
 g(X,Y, Agregados,[[X,Y2]|R], N):-
 	Y2 is Y-1,
 	punto(X,Y2),
@@ -145,7 +129,7 @@ g(X,Y, Agregados,[[X,Y2]|R], N):-
 
 g(_,_,_,[],0).
 
-aplanar([],_,[]).
+aplanar([],[_],[]).
 aplanar([H1|T1],R,S):-
 	aplanar(T1,R,S2),
 	append(H1,S2,S3),
@@ -157,13 +141,18 @@ grupo_punto(X,Y,R,N):-
 	sort(R3,R),
 	length(R,N).
 
-todoAux(_, _,[],[]).
-todoAux(X,Y,[[H1|[T1|_]]|T2],S2):-
+todoAux(_, _,[],[_],[]).
+todoAux(X,Y,[[H1|[T1|_]]|T2],[R2|S3],S):-
 	grupo_punto(X,Y,R2,_),
 	write(R2),nl,
-	todoAux(H1,T1,T2,[R2|S3]),!,S2 = S3.
+	todoAux(H1,T1,T2,S3,_),!,
+	S=S3,!.
+
+eliminarultimo(L,L1):- reverse(L,[_|T]),reverse(T,L1).
 
 todos_grupos(S):-
 	 findall([X,Y],punto(X,Y),[[H1|[T1|_]]|T2]),
-	 todoAux(H1,T1,T2,S2),
-	 S = S2.
+	 todoAux(H1,T1,T2,_,S2),
+	 eliminarultimo(S2,S4),
+	 sort(S4,S3),
+	 S = S3,!.
