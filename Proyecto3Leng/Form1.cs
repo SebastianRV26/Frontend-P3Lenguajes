@@ -26,6 +26,7 @@ namespace Proyecto3Leng
         {
             try
             {
+                // Se establecen la ruta de la ubicación de prolog.
                 Environment.SetEnvironmentVariable("SWI_HOME_DIR", @"C:\Program Files (x86)\swipl");
                 Environment.SetEnvironmentVariable("Path", @"C:\Program Files (x86)\swipl\bin");
                 string[] p = { "-q", "-f", @"main.pl" };
@@ -40,9 +41,7 @@ namespace Proyecto3Leng
         }
 
         /// <summary>
-        /// 
         /// Al precionar el botón cargar.
-        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -50,16 +49,6 @@ namespace Proyecto3Leng
         {
             flag = true;
             lblStatus.Text = "Llenando matriz";
-
-            //PlQuery query = new PlQuery("start."); // se hace la consulta
-
-            /*foreach (PlQueryVariables z in query.SolutionVariables)
-            {
-                Console.WriteLine(z["X"].ToString());
-                MessageBox.Show("X " + z["X"].ToString(), "Print", MessageBoxButtons.OKCancel);
-            }*/
-            //query.NextSolution();
-            //query.Dispose(); // se cierra la conexión
             try
             {
                 int len = int.Parse(tbMatriz.Text);
@@ -72,21 +61,13 @@ namespace Proyecto3Leng
         }
 
         /// <summary>
-        /// 
         /// Crear tabla.
-        /// 
         /// </summary>
         /// <param name="tamannio">
         /// Tamaño de la matriz NxN.
         /// </param>
         private void fillDataGridView(int tamannio)
         {
-            /*dt.Rows.Clear();
-            dt.Columns.Clear();
-            dataGridView1.DataSource = null;
-            dataGridView1.Rows.Clear();
-            dataGridView1.Columns.Clear();
-            */
             dataGridView1.ClearSelection();
             dataGridView1.CellClick -= dataGridView1_CellClick;
             eliminarTodo();
@@ -102,9 +83,7 @@ namespace Proyecto3Leng
         }
 
         /// <summary>
-        /// 
         /// On item click on data grid view.
-        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -129,24 +108,12 @@ namespace Proyecto3Leng
                         {
                             cell.Value = "O";
                             guardarPunto(x, y);
-                            // MessageBox.Show(x + " y " + y, "Print", MessageBoxButtons.OKCancel);
                         }
                     }
                 }
                 else
                 {
                     string message = "";
-
-                    /*PlQuery query = new PlQuery("punto(" + x + "," + y + ")."); // se hace la consulta
-                    if (query.NextSolution() == true)
-                    {
-                        Console.WriteLine("YES");
-                    }
-                    else
-                    {
-                        Console.WriteLine("NO");
-                    }
-                    query.Dispose();*/
                     if (exite_punto(x, y))
                     {
                         string n = get_grupo(x, y);
@@ -155,18 +122,6 @@ namespace Proyecto3Leng
                     {
                         message = "¡El punto no se encuentra en ningún grupo!";
                     }
-
-                    /*
-                    // calcultar el tamaño del grupo al que pertenece el punto
-                    if (cell.Value == "O")
-                    {
-                        // llamo a consulta
-                        message = "El punto seleccionado se encuentra en un grupo de tamaño ";
-                    }
-                    else
-                    {
-                        message = "¡El punto no se encuentra en ningún grupo!";
-                    }*/
                     MessageBox.Show(message, "Consulta: tamaño al grupo del punto");
                 
                 }
@@ -178,9 +133,7 @@ namespace Proyecto3Leng
         }
 
         /// <summary>
-        /// 
         /// Calculen el número de grupos distintos y sus tamaños para toda la cuadrícula.
-        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -195,9 +148,7 @@ namespace Proyecto3Leng
         }
 
         /// <summary>
-        /// 
         /// Terminar de editar la matriz y proceder a realizar consultas.
-        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -205,18 +156,10 @@ namespace Proyecto3Leng
         {
             flag = false;
             lblStatus.Text = "Consultando";
-            /*PlQuery query = new PlQuery("punto(11,X)."); // se hace la consulta
-            foreach (PlQueryVariables z in query.SolutionVariables)
-            {
-                Console.WriteLine(z["X"].ToString());
-                MessageBox.Show("X " + z["X"].ToString(), "Print", MessageBoxButtons.OKCancel);
-            }*/
         }
 
         /// <summary>
-        /// 
         /// Llamar a regla de prolog que genere los puntos de manera aleatoria.
-        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -228,9 +171,7 @@ namespace Proyecto3Leng
             try
             {
                 int len = int.Parse(tbMatriz.Text);
-
                 fillDataGridView(len);
-
                 Random rnd1 = new Random();
                 int tamannio = rnd1.Next(1, len * len + 1); ;
                 
@@ -242,12 +183,11 @@ namespace Proyecto3Leng
                     {
                         dt.Rows[row][column] = "O";
                         guardarPunto(column.ToString(), (row + 1).ToString());
-                        // MessageBox.Show(column.ToString() + " y "+ (row + 1).ToString(), "Print", MessageBoxButtons.OKCancel);
-
                     }
                     
                     tamannio--;
                 }
+                Console.Write("Listo Random");
             }
             catch
             {
@@ -255,8 +195,14 @@ namespace Proyecto3Leng
             }
         }
 
-        //////////////////// consultas frecuentes prolog ////////////////////
-        
+        //////////////////// consultas prolog ////////////////////
+
+        /// <summary>
+        /// Guardar en memoria el punto dado.
+        /// assert(punto(X,Y)).
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         private void guardarPunto(string x, string y)
         {
             PlQuery query = new PlQuery("guardar_punto(" + x + "," + y + ")."); // se hace la consulta
@@ -264,6 +210,12 @@ namespace Proyecto3Leng
             query.Dispose(); // se cierra la conexión
         }
 
+        /// <summary>
+        /// Eliminar de memoria un punto.
+        /// retract(punto(X,Y)).
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         private void eliminarPunto(string x, string y)
         {
             PlQuery query = new PlQuery("eliminar_punto(" + x + "," + y + ")."); // se hace la consulta
@@ -271,6 +223,10 @@ namespace Proyecto3Leng
             query.Dispose(); // se cierra la conexión
         }
 
+        /// <summary>
+        /// Eliminar de memoria todos los puntos.
+        /// retractall(punto(_,_)).
+        /// </summary>
         private void eliminarTodo()
         {
             PlQuery query = new PlQuery("eliminar_todo."); // se hace la consulta
@@ -285,6 +241,12 @@ namespace Proyecto3Leng
             return query.NextSolution();
         }
 
+        /// <summary>
+        /// Obtiene el grupo dado.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         private string get_grupo(string x, string y)
         {
             PlQuery query = new PlQuery("grupo_punto(" + x + "," + y + ",R,N).");
@@ -295,6 +257,7 @@ namespace Proyecto3Leng
             {
                 list1 = z["R"].ToString();
                 n = z["N"].ToString();
+                Console.WriteLine("Listo grupo");
             }
             query.NextSolution();
             if (n != "0")
@@ -333,8 +296,6 @@ namespace Proyecto3Leng
         {
             foreach (List<string> a in arlist)
             {
-                //Console.WriteLine(a[0].ToString() + "," + a[1].ToString());
-
                 int row = int.Parse((a[1]).ToString());
                 int column = int.Parse((a[0]).ToString());
                 DataGridViewCell cell = dataGridView1.Rows[row-1].Cells[column];
@@ -342,6 +303,10 @@ namespace Proyecto3Leng
             }
         }
 
+        /// <summary>
+        /// Obtiene todos los grupos.
+        /// </summary>
+        /// <returns></returns>
         private List<List<List<string>>> get_grupos()
         {
             PlQuery query = new PlQuery("todos_grupos(S).");
@@ -349,7 +314,7 @@ namespace Proyecto3Leng
             foreach (PlQueryVariables z in query.SolutionVariables)
             {
                 list1 = z["S"].ToString();
-                Console.WriteLine("Listo");
+                Console.WriteLine("Listo grupos");
             }
             query.Dispose();
             query.NextSolution();
@@ -359,15 +324,12 @@ namespace Proyecto3Leng
             resultQuery = resultQuery.Replace("]]]", "");
             resultQuery = resultQuery.Replace("[[[", "");
             List<string> listQuery = new List<string>(resultQuery.Split(';'));
-            
-            
             foreach (string list in listQuery)
             {
                 List<List<string>> finalList = new List<List<string>>();
                 string temporal = list;
                 temporal = temporal.Replace("],[", ".");
                 List<string> listaTriple = new List<string>(temporal.Split('.'));
-
                 foreach (string list3 in listaTriple)
                 {
                     List<string> list2 = new List<string>(list3.Split(','));
@@ -376,13 +338,16 @@ namespace Proyecto3Leng
                     subElement.Add(list2[1]);
                     finalList.Add(subElement);
                 }
-                
                 listGrops.Add(finalList);
             }
             return listGrops;
 
         }
 
+        /// <summary>
+        /// Pinta los grupos de disintos colores.
+        /// </summary>
+        /// <param name="listas"></param>
         private void pintar_grupos(List<List<List<string>>> listas)
         {
             Random rnd = new Random();
@@ -399,6 +364,11 @@ namespace Proyecto3Leng
             }
         }
 
+        /// <summary>
+        /// Retorna una cadena con los tamñanos de los grupos.
+        /// </summary>
+        /// <param name="listas"></param>
+        /// <returns></returns>
         private string contar_grupos(List<List<List<string>>> listas)
         {
             var l1 = contar_elementos(listas);
@@ -406,17 +376,19 @@ namespace Proyecto3Leng
             string groups = "";
             foreach (var grp in g)
             {
-                Console.WriteLine("{0} {1}", grp.Key, grp.Count());
                 groups += "Hay "+ grp.Count()+" grupos de "+ grp.Key  + " puntos\n";
             }
-            Console.WriteLine(groups);
             return groups;
         }
 
+        /// <summary>
+        /// Cuantos elementos tiene cada lista.
+        /// </summary>
+        /// <param name="listas"></param>
+        /// <returns></returns>
         private List<int> contar_elementos(List<List<List<string>>> listas)
         {
             List<int> lens = new List<int>();
-            Console.Write("lista0 " + listas.Count().ToString()+"\n");
             foreach (List<List<string>> lista in listas)
             {
                 lens.Add(lista.Count());
