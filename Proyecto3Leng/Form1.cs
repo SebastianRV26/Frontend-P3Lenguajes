@@ -187,6 +187,9 @@ namespace Proyecto3Leng
         private void btnConsultGroups_Click(object sender, EventArgs e)
         {
             // llamar a consultar tamaño de grupos
+            List<List<List<string>>> listGropus = get_grupos();
+            pintar_grupos(listGropus);
+            contar_grupos(listGropus);
             string grupos = "Existen N grupos de tamaño M";
             MessageBox.Show(grupos, "Consulta");
         }
@@ -291,37 +294,44 @@ namespace Proyecto3Leng
             foreach (PlQueryVariables z in query.SolutionVariables)
             {
                 list1 = z["R"].ToString();
-                //Console.WriteLine(z["R"].ToString());
-                // Console.WriteLine(z["N"].ToString());
                 n = z["N"].ToString();
             }
             query.NextSolution();
             if (n != "0")
             {
-                string list2 = list1.Substring(2, list1.Length - 4); // elimina los primeros [[ y los últimos ]]
-                Console.WriteLine("ordr " + list2);
-                string[] stringSeparators = new string[] { "],[" };
-                string[] splitList = list2.Split(stringSeparators, StringSplitOptions.None);
-                //Console.WriteLine("splitList " + splitList);
-                var arlist = new ArrayList();
-                foreach (string line in splitList)
+                string resultQuery = list1.Replace("],[", "];[");
+                resultQuery = resultQuery.Replace("]]", "");
+                resultQuery = resultQuery.Replace("[[", "");
+                List<string> listQuery = new List<string>(resultQuery.Split(';'));
+                List<string> list2;
+                List<List<String>> finalList = new List<List<string>>();
+
+                foreach(string list in listQuery)
                 {
-                    var arlistAux = new ArrayList();
-                    // Console.WriteLine(line);
-                    arlistAux.Add(line[0]);
-                    arlistAux.Add(line[2]);
-                    arlist.Add(arlistAux);
-                    // Console.WriteLine(arlist[0][0]);
+                    string temporal = list;
+                    temporal = temporal.Replace("]", "");
+                    temporal = temporal.Replace("[", "");
+                    list2 = new List<string>(temporal.Split(','));
+                    List<string> sublist = new List<string>();
+                    foreach (string subElement in list2)
+                    {
+                        sublist.Add(subElement);
+                    }
+                    finalList.Add(sublist);
                 }
 
-                pintar_grupo(arlist);
+                pintar_grupo(finalList);
             }
             return n;
         }
 
-        private void pintar_grupo(ArrayList arlist)
+        /// <summary>
+        /// Pintar un grupo de amarrillo.
+        /// </summary>
+        /// <param name="arlist"></param>
+        private void pintar_grupo(List<List<string>> arlist)
         {
-            foreach (ArrayList a in arlist)
+            foreach (List<string> a in arlist)
             {
                 Console.WriteLine(a[0].ToString() + "," + a[1].ToString());
 
@@ -331,5 +341,94 @@ namespace Proyecto3Leng
                 cell.Style.BackColor = System.Drawing.Color.Yellow;
             }
         }
+
+        private List<List<List<string>>> get_grupos()
+        {
+            PlQuery query = new PlQuery("todos_grupos(S).");
+            query.Dispose();
+            string list1 = "";
+            foreach (PlQueryVariables z in query.SolutionVariables)
+            {
+                list1 = z["S"].ToString();
+                Console.WriteLine("1 "+list1);
+            }
+            query.NextSolution();
+            List<List<List<String>>> listGrops = new List<List<List<String>>>();
+            Console.WriteLine("list1 " + list1);
+            string resultQuery = list1.Replace("[],", "");
+            resultQuery = resultQuery.Replace("]],[[", ";");
+            resultQuery = resultQuery.Replace("]]]", "");
+            resultQuery = resultQuery.Replace("[[[", "");
+            Console.WriteLine("resultQuery " + resultQuery);
+            List<String> listQuery = new List<String>(resultQuery.Split(';'));
+            List<string> list2;
+            List<List<String>> finalList = new List<List<String>>();
+            foreach (String list in listQuery)
+            {
+                string temporal = list;
+                Console.WriteLine("temp1 " + temporal);
+                temporal = temporal.Replace("],[", ".");
+                Console.WriteLine("temp2 " + temporal);
+                List<String> listaTriple = new List<String>(temporal.Split('.'));
+
+                foreach (String list3 in listaTriple)
+                {
+                    list2 = new List<String>(list3.Split(','));
+                    List<String> subElement = new List<String>();
+                    subElement.Add(list2[0]);
+                    subElement.Add(list2[1]);
+                    Console.WriteLine("subElement " + list2[0] + " " +list2[1]);
+                    finalList.Add(subElement);
+                    Console.WriteLine("finalList");
+                }
+                
+                listGrops.Add(finalList);
+                Console.WriteLine("listGrops");
+            }
+            return listGrops;
+
+        }
+
+        private void pintar_grupos(List<List<List<String>>> listas)
+        {
+            Random rnd = new Random();
+            foreach (List<List<String>> list in listas)
+            {
+                int r = rnd.Next(0, 256);
+                int g = rnd.Next(0, 256);
+                int b = rnd.Next(0, 256);
+                Console.WriteLine("r "+r.ToString() + " g " + g.ToString() + " b " + b.ToString());
+                foreach (List<String> subList in list)
+                {
+                    Console.WriteLine("y "+subList[1]);
+                    Console.WriteLine("x "+subList[0]);
+                    DataGridViewCell color = dataGridView1.Rows[int.Parse(subList[1])-1].Cells[int.Parse(subList[0])];
+                    color.Style.BackColor = System.Drawing.Color.FromArgb(r, g, b);
+                }
+            }
+        }
+
+        private void contar_grupos(List<List<List<String>>> listas)
+        {
+            var l1 = contar_elementos(listas);
+
+            var g = l1.GroupBy(i => i);
+
+            foreach (var grp in g)
+            {
+                Console.WriteLine("{0} {1}", grp.Key, grp.Count());
+            }
+        }
+
+        private List<int> contar_elementos(List<List<List<String>>> listas)
+        {
+            List<int> lens = new List<int>();
+            foreach (List<List<String>> lista in listas)
+            {
+                lens.Add(lista.Count());
+            }
+            return lens;
+        }
+
     }
 }
