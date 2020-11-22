@@ -189,9 +189,9 @@ namespace Proyecto3Leng
             // llamar a consultar tamaño de grupos
             List<List<List<string>>> listGropus = get_grupos();
             pintar_grupos(listGropus);
-            contar_grupos(listGropus);
-            string grupos = "Existen N grupos de tamaño M";
-            MessageBox.Show(grupos, "Consulta");
+            string groups = contar_grupos(listGropus);
+            //string grupos = "Existen N grupos de tamaño M";
+            MessageBox.Show(groups, "Consulta");
         }
 
         /// <summary>
@@ -333,7 +333,7 @@ namespace Proyecto3Leng
         {
             foreach (List<string> a in arlist)
             {
-                Console.WriteLine(a[0].ToString() + "," + a[1].ToString());
+                //Console.WriteLine(a[0].ToString() + "," + a[1].ToString());
 
                 int row = int.Parse((a[1]).ToString());
                 int column = int.Parse((a[0]).ToString());
@@ -345,85 +345,79 @@ namespace Proyecto3Leng
         private List<List<List<string>>> get_grupos()
         {
             PlQuery query = new PlQuery("todos_grupos(S).");
-            query.Dispose();
             string list1 = "";
             foreach (PlQueryVariables z in query.SolutionVariables)
             {
                 list1 = z["S"].ToString();
-                Console.WriteLine("1 "+list1);
+                Console.WriteLine("Listo");
             }
+            query.Dispose();
             query.NextSolution();
-            List<List<List<String>>> listGrops = new List<List<List<String>>>();
-            Console.WriteLine("list1 " + list1);
+            List<List<List<string>>> listGrops = new List<List<List<string>>>();
             string resultQuery = list1.Replace("[],", "");
             resultQuery = resultQuery.Replace("]],[[", ";");
             resultQuery = resultQuery.Replace("]]]", "");
             resultQuery = resultQuery.Replace("[[[", "");
-            Console.WriteLine("resultQuery " + resultQuery);
-            List<String> listQuery = new List<String>(resultQuery.Split(';'));
-            List<string> list2;
-            List<List<String>> finalList = new List<List<String>>();
-            foreach (String list in listQuery)
+            List<string> listQuery = new List<string>(resultQuery.Split(';'));
+            
+            
+            foreach (string list in listQuery)
             {
+                List<List<string>> finalList = new List<List<string>>();
                 string temporal = list;
-                Console.WriteLine("temp1 " + temporal);
                 temporal = temporal.Replace("],[", ".");
-                Console.WriteLine("temp2 " + temporal);
-                List<String> listaTriple = new List<String>(temporal.Split('.'));
+                List<string> listaTriple = new List<string>(temporal.Split('.'));
 
-                foreach (String list3 in listaTriple)
+                foreach (string list3 in listaTriple)
                 {
-                    list2 = new List<String>(list3.Split(','));
-                    List<String> subElement = new List<String>();
+                    List<string> list2 = new List<string>(list3.Split(','));
+                    List<string> subElement = new List<string>();
                     subElement.Add(list2[0]);
                     subElement.Add(list2[1]);
-                    Console.WriteLine("subElement " + list2[0] + " " +list2[1]);
                     finalList.Add(subElement);
-                    Console.WriteLine("finalList");
                 }
                 
                 listGrops.Add(finalList);
-                Console.WriteLine("listGrops");
             }
             return listGrops;
 
         }
 
-        private void pintar_grupos(List<List<List<String>>> listas)
+        private void pintar_grupos(List<List<List<string>>> listas)
         {
             Random rnd = new Random();
-            foreach (List<List<String>> list in listas)
+            foreach (List<List<string>> list in listas)
             {
                 int r = rnd.Next(0, 256);
                 int g = rnd.Next(0, 256);
                 int b = rnd.Next(0, 256);
-                Console.WriteLine("r "+r.ToString() + " g " + g.ToString() + " b " + b.ToString());
-                foreach (List<String> subList in list)
+                foreach (List<string> subList in list)
                 {
-                    Console.WriteLine("y "+subList[1]);
-                    Console.WriteLine("x "+subList[0]);
                     DataGridViewCell color = dataGridView1.Rows[int.Parse(subList[1])-1].Cells[int.Parse(subList[0])];
                     color.Style.BackColor = System.Drawing.Color.FromArgb(r, g, b);
                 }
             }
         }
 
-        private void contar_grupos(List<List<List<String>>> listas)
+        private string contar_grupos(List<List<List<string>>> listas)
         {
             var l1 = contar_elementos(listas);
-
             var g = l1.GroupBy(i => i);
-
+            string groups = "";
             foreach (var grp in g)
             {
                 Console.WriteLine("{0} {1}", grp.Key, grp.Count());
+                groups += "Hay "+ grp.Count()+" grupos de "+ grp.Key  + " puntos\n";
             }
+            Console.WriteLine(groups);
+            return groups;
         }
 
-        private List<int> contar_elementos(List<List<List<String>>> listas)
+        private List<int> contar_elementos(List<List<List<string>>> listas)
         {
             List<int> lens = new List<int>();
-            foreach (List<List<String>> lista in listas)
+            Console.Write("lista0 " + listas.Count().ToString()+"\n");
+            foreach (List<List<string>> lista in listas)
             {
                 lens.Add(lista.Count());
             }
