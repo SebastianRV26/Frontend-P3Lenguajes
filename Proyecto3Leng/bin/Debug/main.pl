@@ -79,3 +79,26 @@ todos_grupos(S):-
 	 eliminarultimo(S2,S4),
 	 sort(S4,S3),
 	 S = S3,!.
+
+conectado_con(X,Y):- X1 is X+1, punto(X1,Y),!.
+conectado_con(X,Y):- X1 is X-1, punto(X1,Y),!.
+conectado_con(X,Y):- Y1 is Y+1, punto(X,Y1),!.
+conectado_con(X,Y):- Y1 is Y-1, punto(X,Y1),!.
+
+conectado(X,Y):-conectado_con(X,Y).
+
+noConectado(X,Y,[],1):-not(conectado(X,Y)).
+noConectado(_,_,[],0).
+noConectado(X,Y,[[H1|[T1|_]]|T2],N):-
+	not(conectado(X,Y)),
+	noConectado(H1,T1,T2,N2),
+	N3 is N2+1,
+	N = N3.
+
+noConectado(_,_,[[H1|[T1|_]]|T2],N):-
+	noConectado(H1,T1,T2,N).
+
+puntosIndividuales(N):-
+	findall([X,Y],punto(X,Y),[[H1|[T1|_]]|T2]),
+	noConectado(H1,T1,T2,N2),
+	N2 = N,!.

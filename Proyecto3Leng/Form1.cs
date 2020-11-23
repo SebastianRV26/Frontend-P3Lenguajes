@@ -373,7 +373,7 @@ namespace Proyecto3Leng
         {
             var l1 = contar_elementos(listas);
             var g = l1.GroupBy(i => i);
-            string groups = "";
+            string groups = "Hay "+ puntos_individuales() + " puntos individuales\n";
             foreach (var grp in g)
             {
                 groups += "Hay "+ grp.Count()+" grupos de "+ grp.Key  + " puntos\n";
@@ -396,5 +396,22 @@ namespace Proyecto3Leng
             return lens;
         }
 
+        /// <summary>
+        /// Retorna cuánto puntos individuales existen.
+        /// </summary>
+        /// <returns></returns>
+        private string puntos_individuales()
+        {
+            PlQuery query = new PlQuery("puntosIndividuales(N).");
+            string n = "";
+            foreach (PlQueryVariables z in query.SolutionVariables)
+            {
+                n = z["N"].ToString();
+                Console.WriteLine("Listo grupos");
+            }
+            query.Dispose();
+            query.NextSolution();
+            return n;
+        }
     }
 }
