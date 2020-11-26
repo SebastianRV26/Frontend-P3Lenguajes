@@ -16,6 +16,8 @@ namespace Proyecto3Leng
     {
         private Boolean flag = true; // true editable, false consult
         private DataTable dt = new DataTable();
+        private List<List<List<string>>> listasGrupos;
+        private string groupGlobal = "";
 
         public Form1()
         {
@@ -68,6 +70,7 @@ namespace Proyecto3Leng
         /// </param>
         private void fillDataGridView(int tamannio)
         {
+            vacearCombobox();
             dataGridView1.ClearSelection();
             dataGridView1.CellClick -= dataGridView1_CellClick;
             eliminarTodo();
@@ -117,7 +120,7 @@ namespace Proyecto3Leng
                     if (exite_punto(x, y))
                     {
                         string n = get_grupo(x, y);
-                        message = "El punto seleccionado se encuentra en un grupo de tamaño "+n;
+                        message = "El punto seleccionado se encuentra en un grupo de tamaño "+n+"\nEl grupo es "+groupGlobal;
                     } else
                     {
                         message = "¡El punto no se encuentra en ningún grupo!";
@@ -139,12 +142,15 @@ namespace Proyecto3Leng
         /// <param name="e"></param>
         private void btnConsultGroups_Click(object sender, EventArgs e)
         {
+            vacearCombobox();
             // llamar a consultar tamaño de grupos
             List<List<List<string>>> listGropus = get_grupos();
             pintar_grupos(listGropus);
             string groups = contar_grupos(listGropus);
             //string grupos = "Existen N grupos de tamaño M";
             MessageBox.Show(groups, "Consulta");
+            llenarCombobox(listGropus);
+            listasGrupos = listGropus;
         }
 
         /// <summary>
@@ -260,6 +266,7 @@ namespace Proyecto3Leng
                 Console.WriteLine("Listo grupo");
             }
             query.NextSolution();
+            groupGlobal = list1;
             if (n != "0")
             {
                 string resultQuery = list1.Replace("],[", "];[");
@@ -283,7 +290,7 @@ namespace Proyecto3Leng
                     finalList.Add(sublist);
                 }
 
-                pintar_grupo(finalList);
+                pintar_grupo(finalList, System.Drawing.Color.Yellow);
             }
             return n;
         }
@@ -292,14 +299,14 @@ namespace Proyecto3Leng
         /// Pintar un grupo de amarrillo.
         /// </summary>
         /// <param name="arlist"></param>
-        private void pintar_grupo(List<List<string>> arlist)
+        private void pintar_grupo(List<List<string>> arlist, System.Drawing.Color color)
         {
             foreach (List<string> a in arlist)
             {
                 int row = int.Parse((a[1]).ToString());
                 int column = int.Parse((a[0]).ToString());
                 DataGridViewCell cell = dataGridView1.Rows[row-1].Cells[column];
-                cell.Style.BackColor = System.Drawing.Color.Yellow;
+                cell.Style.BackColor = color;
             }
         }
 
@@ -412,6 +419,46 @@ namespace Proyecto3Leng
             query.Dispose();
             query.NextSolution();
             return n;
+        }
+
+        /// <summary>
+        /// Mostrar los grupos en un list box.
+        /// </summary>
+        /// <param name="listas"></param>
+        private void llenarCombobox(List<List<List<string>>> listas)
+        {
+            int i = 1;
+            foreach (List<List<string>> list in listas)
+            {
+                comboBox1.Items.Add("Grupo " + i.ToString());
+                listBox1.Items.Add("Grupo " + i.ToString());
+                i++;
+                foreach (List<string> subList in list)
+                {
+                    listBox1.Items.Add("("+ subList[0].ToString() + "," + subList[1].ToString() + ")");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Limpiar datos del combobox y el list box.
+        /// </summary>
+        private void vacearCombobox()
+        {
+            comboBox1.Items.Clear();
+            listBox1.Items.Clear();
+        }
+
+        /// <summary>
+        /// Colorear el grupo seleccionado.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnGroups_Click(object sender, EventArgs e)
+        {
+            int pos = comboBox1.SelectedIndex;
+            List<List<string>> listas = listasGrupos[pos];
+            pintar_grupo(listas, System.Drawing.Color.Green);
         }
     }
 }
